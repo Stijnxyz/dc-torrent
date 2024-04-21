@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+from discord.ext.commands import check
 import requests
 from qbittorrent import Client
 import json
@@ -18,6 +19,17 @@ bot = commands.Bot(command_prefix='-', intents=discord.Intents.all())
 # Connect to qBittorrent Web UI
 qbittorrent = Client(config['qbittorrent_url'])
 qbittorrent.login(config['qbittorrent_username'], config['qbittorrent_password'])
+
+def has_allowed_role():
+    async def predicate(ctx):
+        allowed_role_id = int(config.get('allowed_role_id', 0))
+        if allowed_role_id:
+            allowed_role = ctx.guild.get_role(allowed_role_id)
+            if allowed_role and allowed_role in ctx.author.roles:
+                return True
+        await ctx.send("You don't have permission to use this command.")
+        return False
+    return check(predicate)
 
 @tasks.loop(minutes=5)
 async def rotate_status():
@@ -45,6 +57,7 @@ async def on_ready():
     rotate_status.start()
 
 @bot.hybrid_command(name="pause", description="Pause a torrent by name or index")
+@has_allowed_role()
 async def pause(ctx, *, torrent_info):
     if config.get('cmd_print', True):
         print("Pausing torrent...")
@@ -64,6 +77,7 @@ async def pause(ctx, *, torrent_info):
         await ctx.send("An error occurred while pausing the torrent. Please try again later.")
 
 @bot.hybrid_command(name="unpause", description="Unpause a torrent by name or index")
+@has_allowed_role()
 async def unpause(ctx, *, torrent_info):
     if config.get('cmd_print', True):
         print("Unpausing torrent...")
@@ -83,6 +97,7 @@ async def unpause(ctx, *, torrent_info):
         await ctx.send("An error occurred while unpausing the torrent. Please try again later.")
 
 @bot.hybrid_command(name="remove", description="Remove a torrent by name or index")
+@has_allowed_role()
 async def remove(ctx, *, torrent_info):
     if config.get('cmd_print', True):
         print("Removing torrent...")
@@ -94,7 +109,13 @@ async def remove(ctx, *, torrent_info):
             await ctx.send("No matching torrents found.")
             return
         
-        confirmation_message = await ctx.send("Are you sure you want to remove the following torrents?\n\n" + "\n".join([torrent['name'] for torrent in matching_torrents]) + "\n\nReact with ✅ to confirm or ❌ to cancel.")
+        # Confirmation message with red embed
+        embed = discord.Embed(
+            title="Confirmation",
+            description="Are you sure you want to remove the following torrents?\n\n" + "\n".join([torrent['name'] for torrent in matching_torrents]),
+            color=discord.Color.red()
+        )
+        confirmation_message = await ctx.send(embed=embed)
 
         await confirmation_message.add_reaction("✅")  # Confirm
         await confirmation_message.add_reaction("❌")  # Cancel
@@ -119,6 +140,7 @@ async def remove(ctx, *, torrent_info):
 
 
 @bot.hybrid_command(name = "movie", description = "Download a movie using QBitTorrent and YTS.mx API")
+@has_allowed_role()
 async def movie(ctx, *, movie_name):
     if config.get('cmd_print', True):
         print(f"Received movie command with movie name: {movie_name}")
@@ -220,6 +242,7 @@ async def movie(ctx, *, movie_name):
         await ctx.send(f"No movie found for '{movie_name.replace('-', ' ')}'.")
 
 @bot.hybrid_command(name = "progress", description = "View the progress of active torrents using QBitTorrent")
+@has_allowed_role()
 async def progress(ctx):
     if config.get('cmd_print', True):
         print("Checking download progress...")
@@ -265,11 +288,6 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Please provide the movie name.")
     else:
-        embed = discord.Embed(
-            title="Error",
-            description=f"An error occurred while processing the command: {error}",
-            color=discord.Color.red()
-        )
-        await ctx.send(embed=embed)
+        print('')
 
 bot.run(config['bot_token'])
