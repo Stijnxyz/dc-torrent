@@ -15,7 +15,20 @@ This is a Discord bot that integrates with qBittorrent to enable users to search
 - Remove, pause, and unpause torrents from qBittorrent directly in Discord
 - Status rotator: Rotates through a list of statuses every 10 minutes
 
+## Images
+All Commands:
+
+![image](https://github.com/Stijnxyz/dc-torrent/assets/84400230/ac2bfd91-d44b-4c07-96eb-d7a9c86d1295)
+
+
+
+
 ## Installation
+
+### Youtube Tutorial:
+[![Youtube](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+
+### You need Python and qBittorrent already installed!
 
 1. Download or clone this repository:
 Download: Click on the green Code button > Download ZIP
