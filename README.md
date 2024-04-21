@@ -1,7 +1,5 @@
 # DC-Torrent Bot
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 ### Current Version
 DC-Torrent V1.0.1
 
