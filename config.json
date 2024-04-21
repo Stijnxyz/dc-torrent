@@ -1,0 +1,26 @@
+{
+  "//bot_token": "This is the token for your Discord bot. Keep it private and secure.",
+  "bot_token": "REPLACE_ME",
+
+  "//qbittorrent_url": "The URL of your qBittorrent Web UI. (Keep as localhost if you run qBittorrent on the same desktop!)",
+  "qbittorrent_url": "http://localhost:8080/",
+
+  "//qbittorrent_username": "The username for accessing the qBittorrent Web UI. (Default = admin)",
+  "qbittorrent_username": "admin",
+
+  "//qbittorrent_password": "The password for accessing the qBittorrent Web UI. (Default) = adminadmin",
+  "qbittorrent_password": "adminadmin",
+
+  "//allowed_role_id": "The ID of the role that is allowed to use specific commands.",
+  "allowed_role_id": "REPLACE_ME",
+
+  "//cmd_print": "Set to true if you want to print command execution details.",
+  "cmd_print": false,
+
+  "//statuses": "List of status messages for the bot to display.",
+  "statuses": [
+    "Github.com/stijnxyz/dc-torrent",
+    "Change in config.json",
+    "You can add as many statuses as you want"
+  ]
+}
