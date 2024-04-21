@@ -2,6 +2,9 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+### Current Version
+DC-Torrent V1.0.1
+
 ## Description
 
 This is a Discord bot that integrates with qBittorrent to enable users to search for and download torrents directly from Discord using the YTS.mx API.
